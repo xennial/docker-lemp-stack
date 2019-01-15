@@ -1,0 +1,38 @@
+nginx:
+  image: nginx
+  ports: 
+    - "8080:80"
+  links:
+    - phpfpm
+  volumes:
+    - ./nginx:/etc/nginx/conf.d
+    # - ./webfiles:/var/www/mycode
+phpfpm:
+  image: php:fpm 
+  ports: 
+    - "9000:9000"
+  volumes: 
+    - ./webfiles:/var/www/mycode
+mysql:
+  image: mysql
+  command: --default-authentication-plugin=mysql_native_password
+  restart: always
+  environment:
+    MYSQL_ROOT_PASSWORD: password123
+  ports:
+    - "3306:3306"
+phpmyadmin: 
+  image: phpmyadmin/phpmyadmin
+  restart: always
+  links:
+    - mysql 
+  ports:
+    - "8183:80"
+  environment:
+    PMA_USER: root 
+    PMA_PASSWORD: password123 
+    PMA_ARBITARY: 1
+    PMA_HOST: mysql
+    PMA_PORT: 3306
+    # MYSQL_ROOT_PASSWORD: password123
+    
